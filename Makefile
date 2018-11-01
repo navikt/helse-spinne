@@ -17,7 +17,7 @@ docker:
 	$(DOCKER) build --pull -t navikt/helse-sykepengebehandling -t navikt/helse-sykepengebehandling:$(VERSION) .
 
 docker-push:
-	$(DOCKER) push navikt/helse-sykemeldingteller:$(VERSION)
+	$(DOCKER) push navikt/helse-sykepengebehandling:$(VERSION)
 
 bump-version:
 	sed 's/navikt\/helse-sykepengebehandling:.*/navikt\/helse-sykepengebehandling:'$$(($$(cat ./VERSION) + 1))'/' naiserator.yaml > naiserator.yaml.new && mv naiserator.yaml.new naiserator.yaml
