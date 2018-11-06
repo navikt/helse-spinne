@@ -4,7 +4,6 @@ services:
 - docker
 before_install:
 - openssl aes-256-cbc -K $encrypted_2af4956177a6_key -iv $encrypted_2af4956177a6_iv -in ./travis/helseci.2018-10-26.private-key.pem.enc -out ./travis/helseci.2018-10-26.private-key.pem -d
-  -d
 - git clone https://github.com/navikt/github-apps-support.git
 - export PATH=`pwd`/github-apps-support/bin:$PATH
 - export INSTALLATION_TOKEN=$(generate-installation-token.sh `generate-jwt.sh ./travis/helseci.2018-10-26.private-key.pem
