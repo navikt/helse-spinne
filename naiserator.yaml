@@ -6,7 +6,7 @@ metadata:
    labels:
       team: teamhelse
 spec:
-   image: navikt/helse-sykepengebehandling:7
+   image: navikt/sykepengebehandling:7
    port: 8080
    team: teamhelse
    healthcheck:
@@ -20,7 +20,7 @@ spec:
          path: isready
          initialDelay: 20
          timeout: 1
-    resources:
+   resources:
       limits:
         cpu: 2000m
         memory: 512Mi

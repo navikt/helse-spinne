@@ -14,13 +14,13 @@ test:
 	$(GRADLE) check
 
 docker:
-	$(DOCKER) build --pull -t navikt/helse-sykepengebehandling -t navikt/helse-sykepengebehandling:$(VERSION) .
+	$(DOCKER) build --pull -t navikt/sykepengebehandling -t navikt/sykepengebehandling:$(VERSION) .
 
 docker-push:
-	$(DOCKER) push navikt/helse-sykepengebehandling:$(VERSION)
+	$(DOCKER) push navikt/sykepengebehandling:$(VERSION)
 
 bump-version:
-	sed 's/navikt\/helse-sykepengebehandling:.*/navikt\/helse-sykepengebehandling:'$$(($$(cat ./VERSION) + 1))'/' naiserator.yaml > naiserator.yaml.new && mv naiserator.yaml.new naiserator.yaml
+	sed 's/navikt\/sykepengebehandling:.*/navikt\/sykepengebehandling:'$$(($$(cat ./VERSION) + 1))'/' naiserator.yaml > naiserator.yaml.new && mv naiserator.yaml.new naiserator.yaml
 	@echo $$(($$(cat ./VERSION) + 1)) > ./VERSION
 
 tag:
