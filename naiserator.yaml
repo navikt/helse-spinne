@@ -4,7 +4,7 @@ metadata:
    name: sykepengebehandling
    namespace: default
 spec:
-   image: navikt/helse-sykepengebehandling:4
+   image: navikt/helse-sykepengebehandling:5
    port: 8080
    team: teamhelse
    healthcheck:
