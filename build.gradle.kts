@@ -33,7 +33,8 @@ application {
 
 dependencies {
     compile(kotlin("stdlib"))
-    compile("org.slf4j:slf4j-simple:$slf4jVersion")
+    compile("ch.qos.logback:logback-classic:1.2.3")
+    compile("net.logstash.logback:logstash-logback-encoder:5.2")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.2")
     compile("io.ktor:ktor-server-netty:$ktorVersion")
     compile("io.prometheus:simpleclient_common:$prometheusVersion")
