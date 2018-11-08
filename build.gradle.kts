@@ -41,6 +41,7 @@ dependencies {
     compile("org.apache.kafka:kafka-streams:$kafkaVersion")
     compile("org.json:json:$orgJsonVersion")
 
+    testCompile("org.apache.kafka:kafka-streams-test-utils:$kafkaVersion")
     testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testCompile("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")

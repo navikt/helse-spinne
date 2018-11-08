@@ -7,26 +7,27 @@ import no.nav.helse.streams.consumeTopic
 import no.nav.helse.streams.streamConfig
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
+import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
 
 class Behandling {
 
     private val appId = "sykepengebehandling"
-    private val env: Environment = Environment()
 
     private val log = LoggerFactory.getLogger("Behandling")
 
     fun start() {
-        StreamConsumer(appId, Environment(), behandling()).start()
+        val env = Environment()
+        StreamConsumer(appId, env, KafkaStreams(behandling(), streamConfig(appId, env))).start()
     }
 
-    private fun behandling(): KafkaStreams {
+    fun behandling(): Topology {
         val builder = StreamsBuilder()
 
         builder.consumeTopic(SYKEPENGEBEHANDLING)
-                .peek { key, value -> log.info("Processing ${value.javaClass} with key $key") }
+                .peek { key, value -> log.info("Processing {} with key {}", value, key) }
 
-        return KafkaStreams(builder.build(), streamConfig(appId, env))
+        return builder.build()
     }
 
 }
