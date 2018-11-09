@@ -22,10 +22,12 @@ fun streamConfig(
     put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
     put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, LogAndFailExceptionHandler::class.java)
 
-    log.info("Using user name ${env.username} to authenticate against Kafka brokers ")
-    put(SaslConfigs.SASL_MECHANISM, "PLAIN")
-    put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
-    put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"${env.username}\" password=\"${env.password}\";")
+    env.username?.let {
+        log.info("Using user name ${it} to authenticate against Kafka brokers ")
+        put(SaslConfigs.SASL_MECHANISM, "PLAIN")
+        put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
+        put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"${it}\" password=\"${env.password}\";")
+    }
 
     env.navTruststorePath?.let {
         try {
