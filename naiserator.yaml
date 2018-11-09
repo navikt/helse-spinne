@@ -9,17 +9,16 @@ spec:
    image: navikt/sykepengebehandling:19
    port: 8080
    team: teamhelse
-   healthcheck:
-      liveness:
-         path: isalive
-         initialDelay: 20
-         timeout: 1
-         periodSeconds: 5
-         failureThreshold: 10
-      readiness:
-         path: isready
-         initialDelay: 20
-         timeout: 1
+   liveness:
+      path: isalive
+      initialDelay: 20
+      timeout: 1
+      periodSeconds: 5
+      failureThreshold: 10
+   readiness:
+      path: isready
+      initialDelay: 20
+      timeout: 1
    resources:
       limits:
         cpu: 2000m
