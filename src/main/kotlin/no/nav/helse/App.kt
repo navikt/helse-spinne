@@ -9,7 +9,7 @@ fun main() {
     val heapMaxSize = Runtime.getRuntime().maxMemory()
     val heapFreeSize = Runtime.getRuntime().freeMemory()
 
-    log.info("totalMemory = {}, maxMemory = {}, freeMemory = {)", heapSize, heapMaxSize, heapFreeSize)
+    log.info("totalMemory = {}, maxMemory = {}, freeMemory = {}", heapSize, heapMaxSize, heapFreeSize)
 
     Behandling().start()
 }
