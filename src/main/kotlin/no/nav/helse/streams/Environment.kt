@@ -1,8 +1,8 @@
 package no.nav.helse.streams
 
 data class Environment(
-        val username: String? = getEnvVar("KAFKA_USERNAME"),
-        val password: String? = getEnvVar("KAFKA_PASSWORD"),
+        val username: String? = getEnvVar("SERVICEUSER_USERNAME"),
+        val password: String? = getEnvVar("SERVICEUSER_PASSWORD"),
         val bootstrapServersUrl: String = getRequiredEnvVar("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092"),
         val schemaRegistryUrl: String = getRequiredEnvVar("KAFKA_SCHEMA_REGISTRY_URL", "localhost:8081"),
         val httpPort: Int? = null,

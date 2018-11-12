@@ -8,10 +8,12 @@ val confluentVersion = "5.0.0"
 val ktorVersion = "1.0.0-beta-3"
 val prometheusVersion = "0.5.0"
 val orgJsonVersion = "20180813"
+val fuelVersion = "1.15.1"
 
 val junitJupiterVersion = "5.3.1"
 val spekVersion = "1.2.1"
 val kluentVersion = "1.41"
+val wireMockVersion = "2.19.0"
 val mainClass = "no.nav.helse.AppKt"
 
 plugins {
@@ -41,11 +43,14 @@ dependencies {
     compile("io.prometheus:simpleclient_hotspot:$prometheusVersion")
     compile("org.apache.kafka:kafka-streams:$kafkaVersion")
     compile("org.json:json:$orgJsonVersion")
+    compile("com.github.kittinunf.fuel:fuel:$fuelVersion")
 
     testCompile("org.apache.kafka:kafka-streams-test-utils:$kafkaVersion")
     testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testCompile("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+    testCompile("com.github.tomakehurst:wiremock:$wireMockVersion")
+
     testCompile("org.amshove.kluent:kluent:$kluentVersion")
     testCompile("org.jetbrains.spek:spek-api:$spekVersion") {
         exclude(group = "org.jetbrains.kotlin")
