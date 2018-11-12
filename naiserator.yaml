@@ -6,7 +6,7 @@ metadata:
    labels:
       team: teamhelse
 spec:
-   image: navikt/sykepengebehandling:20
+   image: navikt/sykepengebehandling:21
    port: 8080
    team: teamhelse
    liveness:
