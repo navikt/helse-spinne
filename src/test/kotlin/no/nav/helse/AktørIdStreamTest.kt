@@ -2,6 +2,7 @@ package no.nav.helse
 
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.helse.streams.Environment
 import no.nav.helse.streams.JsonDeserializer
 import no.nav.helse.streams.JsonSerializer
 import no.nav.helse.streams.Topics
@@ -28,7 +29,7 @@ class AktørIdStreamTest {
         val config = Properties()
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "sykepengebehandling")
         config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "dummy:1234")
-        val testDriver = TopologyTestDriver(AktørIdStream(aktørregisterClientMock).aktørId(), config)
+        val testDriver = TopologyTestDriver(AktørIdStream(Environment(), aktørregisterClientMock).aktørId(), config)
 
         val factory = ConsumerRecordFactory<String, JSONObject>(Topics.SYKEPENGEBEHANDLING.name, StringSerializer(), JsonSerializer())
 

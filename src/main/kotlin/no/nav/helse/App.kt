@@ -1,5 +1,6 @@
 package no.nav.helse
 
+import no.nav.helse.streams.Environment
 import org.slf4j.LoggerFactory
 
 private val log = LoggerFactory.getLogger("App")
@@ -11,5 +12,5 @@ fun main() {
 
     log.info("totalMemory = {}, maxMemory = {}, freeMemory = {}", heapSize, heapMaxSize, heapFreeSize)
 
-    Behandling().start()
+    Behandling().start(Environment())
 }

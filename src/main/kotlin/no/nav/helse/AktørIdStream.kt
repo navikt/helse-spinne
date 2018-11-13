@@ -9,14 +9,25 @@ import org.apache.kafka.streams.kstream.ValueMapper
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 
-class AktørIdStream(val aktørregisterClient: AktørregisterClient) {
+class AktørIdStream(val env: Environment,
+                    val aktørregisterClient:AktørregisterClient = AktørregisterClient(baseUrl = env.aktørregisterUrl, authHelper = AuthHelper(baseUrl = env.stsBaseUrl, username = env.username!!, password = env.password!!))) {
 
     private val appId = "sykepengebehandling-aktorid"
 
     private val log = LoggerFactory.getLogger("AktørIdStream")
 
-    fun start(env: Environment) {
-        StreamConsumer(appId, env, KafkaStreams(aktørId(), streamConfig(appId, env))).start()
+    private val consumer:StreamConsumer
+
+    init {
+        consumer = StreamConsumer(appId, env, KafkaStreams(aktørId(), streamConfig(appId, env)))
+    }
+
+    fun start() {
+        consumer.start()
+    }
+
+    fun stop() {
+        consumer.stop()
     }
 
     @Suppress("UNUSED_PARAMETER")

@@ -92,25 +92,25 @@ class AuthHelperTest {
 
 }
 
-val stsRequestMapping: MappingBuilder = get(urlPathEqualTo("/rest/v1/sts/token"))
+private val stsRequestMapping: MappingBuilder = get(urlPathEqualTo("/rest/v1/sts/token"))
         .withQueryParam("grant_type", equalTo("client_credentials"))
         .withQueryParam("scope", equalTo("openid"))
         .withBasicAuth("foo", "bar")
         .withHeader("Accept", equalTo("application/json"))
 
-val auth_token = """{
+private val auth_token = """{
   "access_token": "default access token",
   "token_type": "Bearer",
   "expires_in": 3600
 }""".trimIndent()
 
-val short_lived_token = """{
+private val short_lived_token = """{
   "access_token": "short lived token",
   "token_type": "Bearer",
   "expires_in": 1
 }""".trimIndent()
 
-val bad_token = """{
+private val bad_token = """{
   "access_token": "this token shouldn't be requested",
   "token_type": "Bearer",
   "expires_in": 1000000000000

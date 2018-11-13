@@ -29,6 +29,10 @@ class StreamConsumer(val consumerName: String,
         addShutdownHook()
     }
 
+    fun stop() {
+        streams.close()
+    }
+
     private fun naisHttpChecks() {
         embeddedServer(Netty, env.httpPort ?: 8080) {
             routing {

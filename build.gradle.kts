@@ -46,6 +46,7 @@ dependencies {
     compile("org.json:json:$orgJsonVersion")
     compile("com.github.kittinunf.fuel:fuel:$fuelVersion")
 
+    testImplementation ("no.nav:kafka-embedded-env:2.0.1")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testCompile("org.apache.kafka:kafka-streams-test-utils:$kafkaVersion")
     testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
