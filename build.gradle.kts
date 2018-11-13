@@ -10,6 +10,7 @@ val prometheusVersion = "0.5.0"
 val orgJsonVersion = "20180813"
 val fuelVersion = "1.15.1"
 
+val mockkVersion = "1.8.12.kotlin13"
 val junitJupiterVersion = "5.3.1"
 val spekVersion = "1.2.1"
 val kluentVersion = "1.41"
@@ -45,6 +46,7 @@ dependencies {
     compile("org.json:json:$orgJsonVersion")
     compile("com.github.kittinunf.fuel:fuel:$fuelVersion")
 
+    testImplementation("io.mockk:mockk:$mockkVersion")
     testCompile("org.apache.kafka:kafka-streams-test-utils:$kafkaVersion")
     testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testCompile("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
