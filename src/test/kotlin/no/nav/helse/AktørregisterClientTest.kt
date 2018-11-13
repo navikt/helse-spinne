@@ -1,15 +1,32 @@
 package no.nav.helse
 
+import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.junit.WireMockRule
-import org.junit.Assert
-import org.junit.Rule
-import org.junit.Test
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
+import org.junit.jupiter.api.*
 
 class AktørregisterClientTest {
 
-    @get: Rule
-    val wireMockRule = WireMockRule(0)
+    companion object {
+        val server: WireMockServer = WireMockServer(WireMockConfiguration.options().dynamicPort())
+
+        @BeforeAll
+        @JvmStatic
+        fun start() {
+            server.start()
+        }
+
+        @AfterAll
+        @JvmStatic
+        fun stop() {
+            server.stop()
+        }
+    }
+
+    @BeforeEach
+    fun configure() {
+        WireMock.configureFor(server.port())
+    }
 
     @Test
     fun `should return gjeldende aktørId`() {
@@ -57,10 +74,10 @@ class AktørregisterClientTest {
                 )
         )
 
-        val authHelper = AuthHelper(baseUrl = wireMockRule.baseUrl(), username = "foo", password = "bar")
+        val authHelper = AuthHelper(baseUrl = server.baseUrl(), username = "foo", password = "bar")
 
-        var gjeldendeIdent = AktørregisterClient(baseUrl = wireMockRule.baseUrl(), authHelper = authHelper).gjeldendeIdent("12345678911")
+        var gjeldendeIdent = AktørregisterClient(baseUrl = server.baseUrl(), authHelper = authHelper).gjeldendeIdent("12345678911")
 
-        Assert.assertEquals("1573082186699", gjeldendeIdent)
+        Assertions.assertEquals("1573082186699", gjeldendeIdent)
     }
 }
