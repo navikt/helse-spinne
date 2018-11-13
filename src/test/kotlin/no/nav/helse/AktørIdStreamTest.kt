@@ -33,7 +33,7 @@ class AktørIdStreamTest {
 
         val factory = ConsumerRecordFactory<String, JSONObject>(Topics.SYKEPENGEBEHANDLING.name, StringSerializer(), JsonSerializer())
 
-        val record = JSONObject("{\"name\": \"Ole Hansen\", \"fnr\": \"12345678911\"}")
+        val record = JSONObject("{\"name\": \"Ole Hansen\", \"fnr\": \"12345678911\", \"aktoerId\": \"\"}")
         testDriver.pipeInput(factory.create(record))
 
         val outputRecord = testDriver.readOutput(Topics.SYKEPENGEBEHANDLING.name, StringDeserializer(), JsonDeserializer())
