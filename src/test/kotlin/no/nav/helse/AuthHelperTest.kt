@@ -1,17 +1,38 @@
 package no.nav.helse
 
+import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.github.tomakehurst.wiremock.junit.WireMockRule
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class AuthHelperTest {
 
-    @get: Rule
-    val wireMockRule = WireMockRule(0)
+    companion object {
+        val server: WireMockServer = WireMockServer(WireMockConfiguration.options().dynamicPort())
+
+        @BeforeAll
+        @JvmStatic
+        fun start() {
+            server.start()
+        }
+
+        @AfterAll
+        @JvmStatic
+        fun stop() {
+            server.stop()
+        }
+    }
+
+    @BeforeEach
+    fun configure() {
+        configureFor(server.port())
+    }
 
     @Test
     fun `should parse a token successfully`() {
@@ -21,7 +42,7 @@ class AuthHelperTest {
                 .whenScenarioStateIs(STARTED)
                 .willSetStateTo("token acquired"))
 
-        val token: String = AuthHelper(baseUrl = wireMockRule.baseUrl(), username = "foo", password = "bar").token()
+        val token: String = AuthHelper(baseUrl = server.baseUrl(), username = "foo", password = "bar").token()
         assertEquals("default access token", token)
     }
 
@@ -39,7 +60,7 @@ class AuthHelperTest {
                 .whenScenarioStateIs("token acquired")
         )
 
-        val authHelper = AuthHelper(baseUrl = wireMockRule.baseUrl(), username = "foo", password = "bar")
+        val authHelper = AuthHelper(baseUrl = server.baseUrl(), username = "foo", password = "bar")
         authHelper.token()
 
         val token: String = authHelper.token()
@@ -61,11 +82,11 @@ class AuthHelperTest {
         )
 
         // get the short-lived one
-        AuthHelper(baseUrl = wireMockRule.baseUrl(), username = "foo", password = "bar").token()
+        AuthHelper(baseUrl = server.baseUrl(), username = "foo", password = "bar").token()
         Thread.sleep(1050)
 
         // get the new one
-        val token: String = AuthHelper(baseUrl = wireMockRule.baseUrl(), username = "foo", password = "bar").token()
+        val token: String = AuthHelper(baseUrl = server.baseUrl(), username = "foo", password = "bar").token()
         assertEquals("default access token", token)
     }
 
