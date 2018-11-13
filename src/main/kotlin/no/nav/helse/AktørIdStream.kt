@@ -26,7 +26,7 @@ class AktørIdStream(val aktørregisterClient: AktørregisterClient) {
 
     @Suppress("UNUSED_PARAMETER")
     private fun harAktørId(key: String?, value: JSONObject): Boolean {
-        return value.has("aktoerId")
+        return value.has("aktoerId") && value.getString("aktoerId").isNotEmpty()
     }
 
     fun aktørId(): Topology {
