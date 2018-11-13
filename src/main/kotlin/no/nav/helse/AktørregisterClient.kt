@@ -7,7 +7,7 @@ class AktørregisterClient(val baseUrl: String, val authHelper: AuthHelper) {
     fun gjeldendeIdent(fnr: String): String {
         val bearer = authHelper.token()
 
-        val (_, _, result) = "$baseUrl/aktoerregister/api/v1/identer?gjeldende=true&identgruppe=AktoerId".httpGet()
+        val (_, _, result) = "$baseUrl/api/v1/identer?gjeldende=true&identgruppe=AktoerId".httpGet()
                 .header(mapOf(
                         "Authorization" to "Bearer " + bearer,
                         "Accept" to "application/json",

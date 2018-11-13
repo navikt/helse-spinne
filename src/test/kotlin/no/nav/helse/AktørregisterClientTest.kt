@@ -32,7 +32,7 @@ class AktørregisterClientTest {
 
     @Test
     fun `should return gjeldende aktørId`() {
-        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/aktoerregister/api/v1/identer"))
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/api/v1/identer"))
                 .withQueryParam("gjeldende", WireMock.equalTo("true"))
                 .withQueryParam("identgruppe", WireMock.equalTo("AktoerId"))
                 .withHeader("Authorization", WireMock.equalTo("Bearer foobar"))

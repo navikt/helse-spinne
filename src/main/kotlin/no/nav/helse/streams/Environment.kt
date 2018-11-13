@@ -9,7 +9,7 @@ data class Environment(
         val navTruststorePath: String? = getEnvVar("NAV_TRUSTSTORE_PATH"),
         val navTruststorePassword: String? = getEnvVar("NAV_TRUSTSTORE_PASSWORD"),
         val STS_BASE_URL: String = getEnvVar("STS_BASE_URL", "http://security-token-service"),
-        val AKTØRREGISTER_BASE_URL: String = getEnvVar("AKTØRREGISTER_BASE_URL", "http://localhost:8080")
+        val AKTØRREGISTER_BASE_URL: String = getEnvVar("AKTORREGISTER_BASE_URL", "http://localhost:8080")
 )
 
 private fun getEnvVar(varName: String, defaultValue: String? = null) =
