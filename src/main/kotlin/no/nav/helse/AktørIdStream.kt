@@ -45,9 +45,10 @@ class AktørIdStream(val env: Environment,
 
         val stream: KStream<String, JSONObject> = builder.consumeTopic(Topics.SYKEPENGEBEHANDLING)
 
-        stream.filter(this::harFnr)
+        stream.peek { key, value -> log.info("Processing {} ({}) with key {}", value, value::class.java, key) }
                 .filterNot(this::harAktørId)
-                .peek { key, value -> log.info("Processing {} ({}) with key {}", value, value::class.java, key) }
+                .peek { key, value -> log.info("Message {} ({}) with key {} does not have aktørId", value, value::class.java, key) }
+                .filter(this::harFnr)
                 .mapValues(ValueMapper<JSONObject, JSONObject> {
                     it.put("aktorId", aktørregisterClient.gjeldendeAktørId(it.getString("fnr")))
                 })
