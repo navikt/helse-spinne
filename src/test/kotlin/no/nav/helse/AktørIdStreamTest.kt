@@ -38,6 +38,6 @@ class AktørIdStreamTest {
 
         val outputRecord = testDriver.readOutput(Topics.SYKEPENGEBEHANDLING.name, StringDeserializer(), JsonDeserializer())
 
-        Assertions.assertEquals("1573082186699", outputRecord.value().getString("aktoerId"))
+        Assertions.assertEquals("1573082186699", outputRecord.value().getString("aktorId"))
     }
 }

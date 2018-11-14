@@ -130,7 +130,7 @@ class AktørIdComponentTest {
         assertEquals(1, consumerRecords.count())
 
         val record = consumerRecords.records(Topics.SYKEPENGEBEHANDLING.name).elementAt(0)
-        assertEquals("1573082186699", record.value().getString("aktoerId"))
+        assertEquals("1573082186699", record.value().getString("aktorId"))
 
         aktørIdStream.stop()
     }

@@ -37,7 +37,7 @@ class AktørIdStream(val env: Environment,
 
     @Suppress("UNUSED_PARAMETER")
     private fun harAktørId(key: String?, value: JSONObject): Boolean {
-        return value.has("aktoerId")
+        return value.has("aktorId")
     }
 
     fun aktørId(): Topology {
@@ -49,7 +49,7 @@ class AktørIdStream(val env: Environment,
                 .filterNot(this::harAktørId)
                 .peek { key, value -> log.info("Processing {} ({}) with key {}", value, value::class.java, key) }
                 .mapValues(ValueMapper<JSONObject, JSONObject> {
-                    it.put("aktoerId", aktørregisterClient.gjeldendeAktørId(it.getString("fnr")))
+                    it.put("aktorId", aktørregisterClient.gjeldendeAktørId(it.getString("fnr")))
                 })
                 .peek {key, value -> log.info("Producing {} ({}) with key {}", value, value::class.java, key) }
                 .toTopic(Topics.SYKEPENGEBEHANDLING)
