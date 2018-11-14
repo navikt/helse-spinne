@@ -49,7 +49,7 @@ class AktørIdStream(val env: Environment,
                 .filterNot(this::harAktørId)
                 .peek { key, value -> log.info("Processing {} ({}) with key {}", value, value::class.java, key) }
                 .mapValues(ValueMapper<JSONObject, JSONObject> {
-                    it.put("aktoerId", aktørregisterClient.gjeldendeIdent(it.getString("fnr")))
+                    it.put("aktoerId", aktørregisterClient.gjeldendeAktørId(it.getString("fnr")))
                 })
                 .peek {key, value -> log.info("Producing {} ({}) with key {}", value, value::class.java, key) }
                 .toTopic(Topics.SYKEPENGEBEHANDLING)

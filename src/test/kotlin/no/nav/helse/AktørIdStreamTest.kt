@@ -23,7 +23,7 @@ class AktørIdStreamTest {
     fun `that aktørId is added to message`() {
         val aktørregisterClientMock = mockk<AktørregisterClient>()
         every {
-            aktørregisterClientMock.gjeldendeIdent("12345678911")
+            aktørregisterClientMock.gjeldendeAktørId("12345678911")
         } returns "1573082186699"
 
         val config = Properties()
