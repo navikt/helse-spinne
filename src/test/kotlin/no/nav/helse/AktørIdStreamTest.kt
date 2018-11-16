@@ -23,8 +23,8 @@ class AktørIdStreamTest {
     fun `that aktørId is added to message`() {
         val aktørregisterClientMock = mockk<AktørregisterClient>()
         every {
-            aktørregisterClientMock.gjeldendeAktørId("12345678911")
-        } returns "1573082186699"
+            aktørregisterClientMock.gjeldendeNorskIdent("1573082186699")
+        } returns "12345678911"
 
         val config = Properties()
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "sykepengebehandling")
@@ -33,11 +33,11 @@ class AktørIdStreamTest {
 
         val factory = ConsumerRecordFactory<String, JSONObject>(Topics.SYKEPENGEBEHANDLING.name, StringSerializer(), JsonSerializer())
 
-        val record = JSONObject("{\"name\": \"Ole Hansen\", \"fnr\": \"12345678911\"}")
+        val record = JSONObject("{\"name\": \"Ole Hansen\", \"aktorId\": \"1573082186699\"}")
         testDriver.pipeInput(factory.create(record))
 
         val outputRecord = testDriver.readOutput(Topics.SYKEPENGEBEHANDLING.name, StringDeserializer(), JsonDeserializer())
 
-        Assertions.assertEquals("1573082186699", outputRecord.value().getString("aktorId"))
+        Assertions.assertEquals("12345678911", outputRecord.value().getString("norskIdent"))
     }
 }

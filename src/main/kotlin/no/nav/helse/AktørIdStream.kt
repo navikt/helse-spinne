@@ -31,8 +31,8 @@ class AktørIdStream(val env: Environment,
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun harFnr(key: String?, value: JSONObject): Boolean {
-        return value.has("fnr")
+    private fun harNorskIdent(key: String?, value: JSONObject): Boolean {
+        return value.has("norskIdent")
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -46,11 +46,11 @@ class AktørIdStream(val env: Environment,
         val stream: KStream<String, JSONObject> = builder.consumeTopic(Topics.SYKEPENGEBEHANDLING)
 
         stream.peek { key, value -> log.info("Processing {} ({}) with key {}", value, value::class.java, key) }
-                .filterNot(this::harAktørId)
-                .peek { key, value -> log.info("Message {} ({}) with key {} does not have aktørId", value, value::class.java, key) }
-                .filter(this::harFnr)
+                .filterNot(this::harNorskIdent)
+                .peek { key, value -> log.info("Message {} ({}) with key {} does not have norskIdent", value, value::class.java, key) }
+                .filter(this::harAktørId)
                 .mapValues(ValueMapper<JSONObject, JSONObject> {
-                    it.put("aktorId", aktørregisterClient.gjeldendeAktørId(it.getString("fnr")))
+                    it.put("norskIdent", aktørregisterClient.gjeldendeNorskIdent(it.getString("aktorId")))
                 })
                 .peek {key, value -> log.info("Producing {} ({}) with key {}", value, value::class.java, key) }
                 .toTopic(Topics.SYKEPENGEBEHANDLING)

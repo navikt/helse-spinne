@@ -97,7 +97,7 @@ class AktørIdComponentTest {
     }
 
     @Test
-    fun `should put aktørId on message`() {
+    fun `should put norskIdent on message`() {
         val env = Environment(
                 username = username,
                 password = password,
@@ -116,12 +116,12 @@ class AktørIdComponentTest {
                 .willReturn(WireMock.ok(aktørregisterResponse))
                 .inScenario("default")
                 .whenScenarioStateIs("auth token acquired")
-                .willSetStateTo("aktørId hentet"))
+                .willSetStateTo("norskIdent hentet"))
 
         val aktørIdStream = AktørIdStream(env)
         aktørIdStream.start()
 
-        produceOneMessage(JSONObject("{\"fnr\": \"12345678911\"}"))
+        produceOneMessage(JSONObject("{\"aktorId\": \"1573082186699\"}"))
 
         val resultConsumer = KafkaConsumer<String, JSONObject>(consumerProperties())
         resultConsumer.subscribe(listOf(Topics.SYKEPENGEBEHANDLING.name))
@@ -130,7 +130,7 @@ class AktørIdComponentTest {
         assertEquals(1, consumerRecords.count())
 
         val record = consumerRecords.records(Topics.SYKEPENGEBEHANDLING.name).elementAt(0)
-        assertEquals("1573082186699", record.value().getString("aktorId"))
+        assertEquals("12345678911", record.value().getString("norskIdent"))
 
         aktørIdStream.stop()
     }
@@ -150,20 +150,20 @@ private val auth_token = """{
 
 private val aktørregisterRequestMapping = WireMock.get(WireMock.urlPathEqualTo("/api/v1/identer"))
         .withQueryParam("gjeldende", WireMock.equalTo("true"))
-        .withQueryParam("identgruppe", WireMock.equalTo("AktoerId"))
+        .withQueryParam("identgruppe", WireMock.equalTo("NorskIdent"))
         .withHeader("Authorization", WireMock.equalTo("Bearer foobar"))
         .withHeader("Nav-Call-Id", WireMock.equalTo("anything"))
         .withHeader("Nav-Consumer-Id", WireMock.equalTo("sykepengebehandling"))
-        .withHeader("Nav-Personidenter", WireMock.equalTo("12345678911"))
+        .withHeader("Nav-Personidenter", WireMock.equalTo("1573082186699"))
         .withHeader("Accept", WireMock.equalTo("application/json"))
 
 private val aktørregisterResponse = """
 {
-  "12345678911": {
+  "1573082186699": {
     "identer": [
       {
-        "ident": "1573082186699",
-        "identgruppe": "AktoerId",
+        "ident": "12345678911",
+        "identgruppe": "NorskIdent",
         "gjeldende": true
       }
     ],
