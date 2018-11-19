@@ -5,7 +5,7 @@ import java.net.URI
 val slf4jVersion = "1.7.25"
 val kafkaVersion = "2.0.0"
 val confluentVersion = "5.0.0"
-val ktorVersion = "1.0.0-beta-3"
+val ktorVersion = "1.0.0"
 val prometheusVersion = "0.5.0"
 val orgJsonVersion = "20180813"
 val fuelVersion = "1.15.1"
