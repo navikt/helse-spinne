@@ -7,17 +7,17 @@ IMG_NAME := navikt/sykepengebehandling
 
 all: build test docker
 release: docker-push
-        git clone https://github.com/navikt/helse-iac.git
+	git clone https://github.com/navikt/helse-iac.git
 
-        cd helse-iac; \
-        ./set-image.sh preprod/sykepengebehandling/naiserator.yaml $(IMG_NAME):$(VERSION); \
-        ./set-image.sh prod/sykepengebehandling/naiserator.yaml $(IMG_NAME):$(VERSION); \
-        git config user.name team-helse[bot]; \
-        git config user.email team-helse[bot]@users.noreply.github.com; \
-        git add preprod/sykepengebehandling/naiserator.yaml; \
-        git add prod/sykepengebehandling/naiserator.yaml; \
-        git commit -m "Bump version" -m "Caused by $(TRAVIS_BUILD_WEB_URL)" --author "$(shell git log -1 --pretty=format:'%an <%ae>')"; \
-        git push https://x-access-token:$(INSTALLATION_TOKEN)@github.com/navikt/helse-iac.git master;
+	cd helse-iac; \
+	./set-image.sh preprod/sykepengebehandling/naiserator.yaml $(IMG_NAME):$(VERSION); \
+	./set-image.sh prod/sykepengebehandling/naiserator.yaml $(IMG_NAME):$(VERSION); \
+	git config user.name team-helse[bot]; \
+	git config user.email team-helse[bot]@users.noreply.github.com; \
+	git add preprod/sykepengebehandling/naiserator.yaml; \
+	git add prod/sykepengebehandling/naiserator.yaml; \
+	git commit -m "Bump version" -m "Caused by $(TRAVIS_BUILD_WEB_URL)" --author "$(shell git log -1 --pretty=format:'%an <%ae>')"; \
+	git push https://x-access-token:$(INSTALLATION_TOKEN)@github.com/navikt/helse-iac.git master;
 
 build:
 	$(GRADLE) installDist
