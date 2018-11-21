@@ -15,7 +15,7 @@ class AktørregisterClient(val baseUrl: String, val authHelper: AuthHelper) {
                         "Authorization" to "Bearer $bearer",
                         "Accept" to "application/json",
                         "Nav-Call-Id" to "anything",
-                        "Nav-Consumer-Id" to "sykepengebehandling",
+                        "Nav-Consumer-Id" to "spinne",
                         "Nav-Personidenter" to ident
                 ))
                 .responseString()

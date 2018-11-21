@@ -86,7 +86,7 @@ class AktørIdComponentTest {
             put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
             put(SaslConfigs.SASL_MECHANISM, "PLAIN")
             put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"${username}\" password=\"${password}\";")
-            put(ConsumerConfig.GROUP_ID_CONFIG, "sykepengebehandling-test-verification")
+            put(ConsumerConfig.GROUP_ID_CONFIG, "spinne-test-verification")
         }
     }
 
@@ -153,7 +153,7 @@ private val aktørregisterRequestMapping = WireMock.get(WireMock.urlPathEqualTo(
         .withQueryParam("identgruppe", WireMock.equalTo("NorskIdent"))
         .withHeader("Authorization", WireMock.equalTo("Bearer foobar"))
         .withHeader("Nav-Call-Id", WireMock.equalTo("anything"))
-        .withHeader("Nav-Consumer-Id", WireMock.equalTo("sykepengebehandling"))
+        .withHeader("Nav-Consumer-Id", WireMock.equalTo("spinne"))
         .withHeader("Nav-Personidenter", WireMock.equalTo("1573082186699"))
         .withHeader("Accept", WireMock.equalTo("application/json"))
 

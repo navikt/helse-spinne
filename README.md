@@ -1,7 +1,7 @@
-[![Travis CI status](https://travis-ci.com/navikt/helse-sykepengebehandling.svg?branch=master)](https://travis-ci.com/navikt/helse-sykepengebehandling)
+[![Travis CI status](https://travis-ci.com/navikt/helse-spinne.svg?branch=master)](https://travis-ci.com/navikt/helse-spinne)
 
-Sykepengebehandling
-===================
+Spinne
+======
 
 Behandler søkepengesøknader.
 

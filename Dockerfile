@@ -1,4 +1,4 @@
 FROM navikt/java:10
 
-ENV APP_BINARY=sykepengebehandling
-COPY build/install/sykepengebehandling/ .
+ENV APP_BINARY=spinne
+COPY build/install/spinne/ .

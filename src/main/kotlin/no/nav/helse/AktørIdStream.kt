@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 class AktørIdStream(val env: Environment,
                     val aktørregisterClient:AktørregisterClient = AktørregisterClient(baseUrl = env.aktørregisterUrl, authHelper = AuthHelper(baseUrl = env.stsBaseUrl, username = env.username!!, password = env.password!!))) {
 
-    private val appId = "sykepengebehandling-aktorid"
+    private val appId = "spinne-aktorid"
 
     private val log = LoggerFactory.getLogger("AktørIdStream")
 

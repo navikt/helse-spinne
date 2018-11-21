@@ -76,7 +76,7 @@ private val aktørregisterRequestMapping = WireMock.get(WireMock.urlPathEqualTo(
         .withQueryParam("gjeldende", WireMock.equalTo("true"))
         .withHeader("Authorization", WireMock.equalTo("Bearer foobar"))
         .withHeader("Nav-Call-Id", WireMock.equalTo("anything"))
-        .withHeader("Nav-Consumer-Id", WireMock.equalTo("sykepengebehandling"))
+        .withHeader("Nav-Consumer-Id", WireMock.equalTo("spinne"))
         .withHeader("Accept", WireMock.equalTo("application/json"))
 
 private val ok_aktoerId_response = """
