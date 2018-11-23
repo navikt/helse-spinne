@@ -1,4 +1,4 @@
 FROM navikt/java:10
 
-ENV APP_BINARY=spinne
-COPY build/install/spinne/ .
+COPY build/libs/spinne-all.jar app.jar
+

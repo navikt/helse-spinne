@@ -18,7 +18,7 @@ before_install:
 - ln -s /etc/ssl/certs/java/cacerts "${JAVA_HOME}/lib/security/cacerts"
 script:
 - "./gradlew check"
-- "./gradlew installDist"
+- "./gradlew build"
 - docker build --pull -t $DOCKER_IMG_NAME:$COMMIT_SHORT .
 - |
   if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "master" ]; then
