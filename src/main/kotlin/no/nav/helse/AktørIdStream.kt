@@ -1,5 +1,6 @@
 package no.nav.helse
 
+import io.prometheus.client.Counter
 import no.nav.helse.streams.*
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
@@ -11,6 +12,12 @@ import org.slf4j.LoggerFactory
 
 class AktørIdStream(val env: Environment,
                     val aktørregisterClient:AktørregisterClient = AktørregisterClient(baseUrl = env.aktørregisterUrl, authHelper = AuthHelper(baseUrl = env.stsBaseUrl, username = env.username!!, password = env.password!!))) {
+
+    private val acceptCounter = Counter.build()
+            .name("aktor_id_stream_counter")
+            .labelNames("state")
+            .help("Antall meldinger som 'AktørIdStream' har godtatt og forsøkt behandlet")
+            .register()
 
     private val appId = "spinne-aktorid"
 
@@ -49,10 +56,12 @@ class AktørIdStream(val env: Environment,
                 .filterNot(this::harNorskIdent)
                 .peek { key, value -> log.info("Message {} ({}) with key {} does not have norskIdent", value, value::class.java, key) }
                 .filter(this::harAktørId)
+                .peek { _, _ -> acceptCounter.labels("accepted").inc()}
                 .mapValues(ValueMapper<JSONObject, JSONObject> {
                     it.put("norskIdent", aktørregisterClient.gjeldendeNorskIdent(it.getString("aktorId")))
                 })
                 .peek {key, value -> log.info("Producing {} ({}) with key {}", value, value::class.java, key) }
+                .peek { _, _ -> acceptCounter.labels("success").inc()}
                 .toTopic(Topics.SYKEPENGEBEHANDLING)
 
         return builder.build()

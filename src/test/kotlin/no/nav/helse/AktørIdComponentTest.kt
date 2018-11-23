@@ -1,9 +1,11 @@
 package no.nav.helse;
 
+import com.github.kittinunf.fuel.httpGet
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.stubbing.Scenario
+import io.prometheus.client.CollectorRegistry
 import no.nav.common.JAASCredential
 import no.nav.common.KafkaEnvironment
 import no.nav.helse.streams.Environment
@@ -43,6 +45,7 @@ class AktørIdComponentTest {
         @BeforeAll
         @JvmStatic
         fun setup() {
+            CollectorRegistry.defaultRegistry.clear()
             server.start()
             embeddedEnvironment.start()
         }
@@ -132,7 +135,22 @@ class AktørIdComponentTest {
         val record = consumerRecords.records(Topics.SYKEPENGEBEHANDLING.name).elementAt(0)
         assertEquals("12345678911", record.value().getString("norskIdent"))
 
+        verifyMetrics()
+
         aktørIdStream.stop()
+    }
+
+    private fun verifyMetrics() {
+        val (_, response, _) = "http://localhost:8080/metrics".httpGet().response()
+        val aktorRegex = ".*state=\"(.*)\".* (\\d*\\.\\d*)$".toRegex()
+        val counters = String(response.data)
+                .lines()
+                .filter { it.startsWith("aktor_id_stream_counter{state=\"") }
+                .map { aktorRegex.matchEntire(it)!! }
+                .map { Pair(first = it.groupValues[1], second = it.groupValues[2]) }
+                .toMap()
+        assertEquals("1.0", counters["accepted"])
+        assertEquals("1.0", counters["success"])
     }
 }
 

@@ -2,6 +2,7 @@ package no.nav.helse
 
 import io.mockk.every
 import io.mockk.mockk
+import io.prometheus.client.CollectorRegistry
 import no.nav.helse.streams.Environment
 import no.nav.helse.streams.JsonDeserializer
 import no.nav.helse.streams.JsonSerializer
@@ -12,7 +13,9 @@ import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.TopologyTestDriver
 import org.apache.kafka.streams.test.ConsumerRecordFactory
 import org.json.JSONObject
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.util.*
 
@@ -39,5 +42,13 @@ class AktørIdStreamTest {
         val outputRecord = testDriver.readOutput(Topics.SYKEPENGEBEHANDLING.name, StringDeserializer(), JsonDeserializer())
 
         Assertions.assertEquals("12345678911", outputRecord.value().getString("norskIdent"))
+    }
+
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun `tear it down`() {
+            CollectorRegistry.defaultRegistry.clear()
+        }
     }
 }
