@@ -1,6 +1,7 @@
-package no.nav.helse
+package no.nav.helse.streams.aktør
 
 import com.github.kittinunf.fuel.httpGet
+import no.nav.helse.AuthHelper
 import org.json.JSONObject
 
 class AktørregisterClient(val baseUrl: String, val authHelper: AuthHelper) {

@@ -1,4 +1,4 @@
-package no.nav.helse;
+package no.nav.helse.streams.aktør;
 
 import com.github.kittinunf.fuel.httpGet
 import com.github.tomakehurst.wiremock.WireMockServer
@@ -8,7 +8,7 @@ import com.github.tomakehurst.wiremock.stubbing.Scenario
 import io.prometheus.client.CollectorRegistry
 import no.nav.common.JAASCredential
 import no.nav.common.KafkaEnvironment
-import no.nav.helse.streams.Environment
+import no.nav.helse.Environment
 import no.nav.helse.streams.JsonDeserializer
 import no.nav.helse.streams.JsonSerializer
 import no.nav.helse.streams.Topics
@@ -76,7 +76,7 @@ class AktørIdComponentTest {
             put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer::class.java)
             put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
             put(SaslConfigs.SASL_MECHANISM, "PLAIN")
-            put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"${username}\" password=\"${password}\";")
+            put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";")
         }
     }
 
@@ -88,7 +88,7 @@ class AktørIdComponentTest {
             put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer::class.java)
             put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT")
             put(SaslConfigs.SASL_MECHANISM, "PLAIN")
-            put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"${username}\" password=\"${password}\";")
+            put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";")
             put(ConsumerConfig.GROUP_ID_CONFIG, "spinne-test-verification")
         }
     }

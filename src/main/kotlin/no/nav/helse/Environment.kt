@@ -1,8 +1,8 @@
-package no.nav.helse.streams
+package no.nav.helse
 
 data class Environment(
-        val username: String? = getEnvVar("SERVICEUSER_USERNAME"),
-        val password: String? = getEnvVar("SERVICEUSER_PASSWORD"),
+        val username: String? = getEnvVar("SERVICEUSER_USERNAME", "foo"),
+        val password: String? = getEnvVar("SERVICEUSER_PASSWORD", "bar"),
         val bootstrapServersUrl: String = getEnvVar("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092"),
         val schemaRegistryUrl: String = getEnvVar("KAFKA_SCHEMA_REGISTRY_URL", "localhost:8081"),
         val httpPort: Int? = null,
@@ -13,6 +13,6 @@ data class Environment(
 )
 
 private fun getEnvVar(varName: String, defaultValue: String? = null) =
-        getEnvVar(varName) ?: defaultValue ?: throw RuntimeException("Missing required variable \"$varName\"")
+        System.getenv().getOrDefault(varName, defaultValue)
 
-private fun getEnvVar(varName: String) = System.getenv(varName)
+private fun getRequiredEnvVar(varName: String) = System.getenv(varName) ?: throw RuntimeException("Missing required variable \"$varName\"")

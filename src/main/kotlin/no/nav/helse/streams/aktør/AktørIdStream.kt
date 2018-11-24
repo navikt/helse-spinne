@@ -1,6 +1,8 @@
-package no.nav.helse
+package no.nav.helse.streams.aktør
 
 import io.prometheus.client.Counter
+import no.nav.helse.AuthHelper
+import no.nav.helse.Environment
 import no.nav.helse.streams.*
 import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
@@ -11,7 +13,7 @@ import org.json.JSONObject
 import org.slf4j.LoggerFactory
 
 class AktørIdStream(val env: Environment,
-                    val aktørregisterClient:AktørregisterClient = AktørregisterClient(baseUrl = env.aktørregisterUrl, authHelper = AuthHelper(baseUrl = env.stsBaseUrl, username = env.username!!, password = env.password!!))) {
+                    val aktørregisterClient: AktørregisterClient = AktørregisterClient(baseUrl = env.aktørregisterUrl, authHelper = AuthHelper(baseUrl = env.stsBaseUrl, username = env.username!!, password = env.password!!))) {
 
     private val acceptCounter = Counter.build()
             .name("aktor_id_stream_counter")
@@ -26,7 +28,10 @@ class AktørIdStream(val env: Environment,
     private val consumer:StreamConsumer
 
     init {
-        consumer = StreamConsumer(appId, env, KafkaStreams(aktørId(), streamConfig(appId, env)))
+        val props = streamConfig(appId, env.bootstrapServersUrl,
+                env.username to env.password,
+                env.navTruststorePath to env.navTruststorePassword)
+        consumer = StreamConsumer(appId, KafkaStreams(aktørId(), props))
     }
 
     fun start() {

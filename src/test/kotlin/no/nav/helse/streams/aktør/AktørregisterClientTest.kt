@@ -1,4 +1,4 @@
-package no.nav.helse
+package no.nav.helse.streams.aktør
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
@@ -6,6 +6,7 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.stubbing.Scenario
 import io.mockk.every
 import io.mockk.mockk
+import no.nav.helse.AuthHelper
 import org.junit.jupiter.api.*
 
 class AktørregisterClientTest {

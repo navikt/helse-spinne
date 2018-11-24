@@ -1,8 +1,8 @@
 package no.nav.helse
 
-import no.nav.helse.streams.Environment
+import no.nav.helse.streams.aktør.AktørIdStream
 
-class Behandling {
+class Spinne {
 
     fun start(env: Environment) {
         AktørIdStream(env).start()

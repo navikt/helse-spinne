@@ -1,13 +1,9 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URI
 
-val slf4jVersion = "1.7.25"
-val kafkaVersion = "2.0.0"
-val confluentVersion = "5.0.0"
-val ktorVersion = "1.0.0"
-val prometheusVersion = "0.5.0"
-val orgJsonVersion = "20180813"
+val kafkaVersion = "2.0.1"
 val fuelVersion = "1.15.1"
 
 val mockkVersion = "1.8.12.kotlin13"
@@ -29,22 +25,14 @@ buildscript {
     }
 }
 
-kotlin.experimental.coroutines = Coroutines.ENABLE
-
 application {
     mainClassName = "$mainClass"
 }
 
 dependencies {
     compile(kotlin("stdlib"))
-    compile("ch.qos.logback:logback-classic:1.2.3")
-    compile("net.logstash.logback:logstash-logback-encoder:5.2")
+    compile("no.nav.helse:streams:10")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.2")
-    compile("io.ktor:ktor-server-netty:$ktorVersion")
-    compile("io.prometheus:simpleclient_common:$prometheusVersion")
-    compile("io.prometheus:simpleclient_hotspot:$prometheusVersion")
-    compile("org.apache.kafka:kafka-streams:$kafkaVersion")
-    compile("org.json:json:$orgJsonVersion")
     compile("com.github.kittinunf.fuel:fuel:$fuelVersion")
 
     testImplementation ("no.nav:kafka-embedded-env:2.0.1")
@@ -73,8 +61,16 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_10
-    targetCompatibility = JavaVersion.VERSION_1_10
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.withType<ShadowJar> {
+    classifier = ""
 }
 
 tasks.withType<Test> {
