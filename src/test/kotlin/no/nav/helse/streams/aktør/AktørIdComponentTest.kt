@@ -20,13 +20,9 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.config.SaslConfigs
 import org.json.JSONObject
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import java.time.Duration
 import java.util.*
-import kotlin.test.assertEquals
 
 class AktørIdComponentTest {
     companion object {
@@ -66,7 +62,7 @@ class AktørIdComponentTest {
 
     @Test
     fun `embedded kafka cluster is up and running`() {
-        assertEquals(embeddedEnvironment.serverPark.status, KafkaEnvironment.ServerParkStatus.Started)
+        Assertions.assertEquals(embeddedEnvironment.serverPark.status, KafkaEnvironment.ServerParkStatus.Started)
     }
 
     private fun producerProperties(): Properties {
@@ -130,10 +126,10 @@ class AktørIdComponentTest {
         resultConsumer.subscribe(listOf(Topics.SYKEPENGEBEHANDLING.name))
         val consumerRecords = resultConsumer.poll(Duration.ofSeconds(10))
 
-        assertEquals(1, consumerRecords.count())
+        Assertions.assertEquals(1, consumerRecords.count())
 
         val record = consumerRecords.records(Topics.SYKEPENGEBEHANDLING.name).elementAt(0)
-        assertEquals("12345678911", record.value().getString("norskIdent"))
+        Assertions.assertEquals("12345678911", record.value().getString("norskIdent"))
 
         verifyMetrics()
 
@@ -149,8 +145,8 @@ class AktørIdComponentTest {
                 .map { aktorRegex.matchEntire(it)!! }
                 .map { Pair(first = it.groupValues[1], second = it.groupValues[2]) }
                 .toMap()
-        assertEquals("1.0", counters["accepted"])
-        assertEquals("1.0", counters["success"])
+        Assertions.assertEquals("1.0", counters["accepted"])
+        Assertions.assertEquals("1.0", counters["success"])
     }
 }
 

@@ -5,11 +5,7 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import org.junit.jupiter.api.*
 
 class AuthHelperTest {
 
@@ -43,7 +39,7 @@ class AuthHelperTest {
                 .willSetStateTo("token acquired"))
 
         val token: String = AuthHelper(baseUrl = server.baseUrl(), username = "foo", password = "bar").token()
-        assertEquals("default access token", token)
+        Assertions.assertEquals("default access token", token)
     }
 
     @Test
@@ -64,7 +60,7 @@ class AuthHelperTest {
         authHelper.token()
 
         val token: String = authHelper.token()
-        assertEquals("default access token", token)
+        Assertions.assertEquals("default access token", token)
     }
 
     @Test
@@ -87,7 +83,7 @@ class AuthHelperTest {
 
         // get the new one
         val token: String = AuthHelper(baseUrl = server.baseUrl(), username = "foo", password = "bar").token()
-        assertEquals("default access token", token)
+        Assertions.assertEquals("default access token", token)
     }
 
 }
