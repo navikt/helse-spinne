@@ -1,7 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.net.URI
 
 val kafkaVersion = "2.0.1"
 val fuelVersion = "1.15.1"
@@ -65,7 +63,11 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-tasks.withType<KotlinCompile> {
+tasks.named<KotlinCompile>("compileKotlin") {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.named<KotlinCompile>("compileTestKotlin") {
     kotlinOptions.jvmTarget = "1.8"
 }
 
