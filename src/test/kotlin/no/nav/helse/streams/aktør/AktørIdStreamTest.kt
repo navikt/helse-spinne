@@ -31,11 +31,11 @@ class AktørIdStreamTest {
         val config = Properties()
         config.put(StreamsConfig.APPLICATION_ID_CONFIG, "sykepengebehandling")
         config.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "dummy:1234")
-        val testDriver = TopologyTestDriver(AktørIdStream(Environment(), aktørregisterClientMock).aktørId(), config)
+        val testDriver = TopologyTestDriver(AktørIdStream(Environment(), aktørregisterClientMock).fromSyfo(), config)
 
-        val factory = ConsumerRecordFactory<String, JSONObject>(Topics.SYKEPENGEBEHANDLING.name, StringSerializer(), JsonSerializer())
+        val factory = ConsumerRecordFactory<String, JSONObject>(Topics.SYKEPENGESØKNADER_INN.name, StringSerializer(), JsonSerializer())
 
-        val record = JSONObject("{\"name\": \"Ole Hansen\", \"aktorId\": \"1573082186699\"}")
+        val record = JSONObject("""{"name": "Ole Hansen", "aktorId": "1573082186699", "soknadstype": "typen", "status": "sendt"}""")
         testDriver.pipeInput(factory.create(record))
 
         val outputRecord = testDriver.readOutput(Topics.SYKEPENGEBEHANDLING.name, StringDeserializer(), JsonDeserializer())

@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory
 class AktørIdStream(val env: Environment,
                     val aktørregisterClient: AktørregisterClient = AktørregisterClient(baseUrl = env.aktørregisterUrl, authHelper = AuthHelper(baseUrl = env.stsBaseUrl, username = env.username!!, password = env.password!!))) {
 
-    private val acceptCounter = Counter.build()
-            .name("aktor_id_stream_counter")
-            .labelNames("state")
-            .help("Antall meldinger som 'AktørIdStream' har godtatt og forsøkt behandlet")
+    private val counter = Counter.build()
+            .name("sykepenger_mottatte_soknader")
+            .labelNames("type", "status")
+            .help("Antall mottatte søknader til behandling")
             .register()
 
     private val appId = "spinne-aktorid"
@@ -31,7 +31,7 @@ class AktørIdStream(val env: Environment,
         val props = streamConfig(appId, env.bootstrapServersUrl,
                 env.username to env.password,
                 env.navTruststorePath to env.navTruststorePassword)
-        consumer = StreamConsumer(appId, KafkaStreams(aktørId(), props))
+        consumer = StreamConsumer(appId, KafkaStreams(fromSyfo(), props))
     }
 
     fun start() {
@@ -43,30 +43,22 @@ class AktørIdStream(val env: Environment,
     }
 
     @Suppress("UNUSED_PARAMETER")
-    private fun harNorskIdent(key: String?, value: JSONObject): Boolean {
-        return value.has("norskIdent")
-    }
-
-    @Suppress("UNUSED_PARAMETER")
     private fun harAktørId(key: String?, value: JSONObject): Boolean {
         return value.has("aktorId")
     }
 
-    fun aktørId(): Topology {
+    fun fromSyfo(): Topology {
         val builder = StreamsBuilder()
 
-        val stream: KStream<String, JSONObject> = builder.consumeTopic(Topics.SYKEPENGEBEHANDLING)
+        val stream: KStream<String, JSONObject> = builder.consumeTopic(Topics.SYKEPENGESØKNADER_INN)
 
         stream.peek { key, value -> log.info("Processing {} ({}) with key {}", value, value::class.java, key) }
-                .filterNot(this::harNorskIdent)
-                .peek { key, value -> log.info("Message {} ({}) with key {} does not have norskIdent", value, value::class.java, key) }
+                .peek { _, value -> counter.labels(value["soknadstype"].toString(), value["status"].toString()).inc() }
                 .filter(this::harAktørId)
-                .peek { _, _ -> acceptCounter.labels("accepted").inc()}
                 .mapValues(ValueMapper<JSONObject, JSONObject> {
                     it.put("norskIdent", aktørregisterClient.gjeldendeNorskIdent(it.getString("aktorId")))
                 })
                 .peek {key, value -> log.info("Producing {} ({}) with key {}", value, value::class.java, key) }
-                .peek { _, _ -> acceptCounter.labels("success").inc()}
                 .toTopic(Topics.SYKEPENGEBEHANDLING)
 
         return builder.build()

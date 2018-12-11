@@ -35,7 +35,7 @@ class AktørIdComponentTest {
                 autoStart = false,
                 withSchemaRegistry = false,
                 withSecurity = true,
-                topics = listOf(Topics.SYKEPENGEBEHANDLING.name)
+                topics = listOf(Topics.SYKEPENGEBEHANDLING.name, Topics.SYKEPENGESØKNADER_INN.name)
         )
 
         @BeforeAll
@@ -91,7 +91,7 @@ class AktørIdComponentTest {
 
     private fun produceOneMessage(message: JSONObject) {
         val producer = KafkaProducer<String, JSONObject>(producerProperties())
-        producer.send(ProducerRecord(Topics.SYKEPENGEBEHANDLING.name, null, message))
+        producer.send(ProducerRecord(Topics.SYKEPENGESØKNADER_INN.name, null, message))
         producer.flush()
     }
 
@@ -120,7 +120,7 @@ class AktørIdComponentTest {
         val aktørIdStream = AktørIdStream(env)
         aktørIdStream.start()
 
-        produceOneMessage(JSONObject("{\"aktorId\": \"1573082186699\"}"))
+        produceOneMessage(JSONObject("""{"aktorId": "1573082186699", "soknadstype": "typen", "status": "sendt"}"""))
 
         val resultConsumer = KafkaConsumer<String, JSONObject>(consumerProperties())
         resultConsumer.subscribe(listOf(Topics.SYKEPENGEBEHANDLING.name))
@@ -138,15 +138,14 @@ class AktørIdComponentTest {
 
     private fun verifyMetrics() {
         val (_, response, _) = "http://localhost:8080/metrics".httpGet().response()
-        val aktorRegex = ".*state=\"(.*)\".* (\\d*\\.\\d*)$".toRegex()
+        val aktorRegex = ".*status=\"(.*)\".* (\\d*\\.\\d*)$".toRegex()
         val counters = String(response.data)
                 .lines()
-                .filter { it.startsWith("aktor_id_stream_counter{state=\"") }
+                .filter { it.startsWith("sykepenger_mottatte_soknader{type=") }
                 .map { aktorRegex.matchEntire(it)!! }
                 .map { Pair(first = it.groupValues[1], second = it.groupValues[2]) }
                 .toMap()
-        Assertions.assertEquals("1.0", counters["accepted"])
-        Assertions.assertEquals("1.0", counters["success"])
+        Assertions.assertEquals("1.0", counters["sendt"])
     }
 }
 
