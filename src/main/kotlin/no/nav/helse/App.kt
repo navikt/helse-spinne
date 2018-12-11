@@ -1,15 +1,19 @@
 package no.nav.helse
 
 import org.slf4j.LoggerFactory
+import kotlin.concurrent.*
 
-private val log = LoggerFactory.getLogger("App")
+private val log = LoggerFactory.getLogger("Spinne")
 
 fun main() {
-    val heapSize = Runtime.getRuntime().totalMemory()
-    val heapMaxSize = Runtime.getRuntime().maxMemory()
-    val heapFreeSize = Runtime.getRuntime().freeMemory()
+    log.info("Starting Spinne")
 
-    log.info("totalMemory = {}, maxMemory = {}, freeMemory = {}", heapSize, heapMaxSize, heapFreeSize)
+    val spinne = Spinne()
 
-    Spinne().start(Environment())
+    spinne.start()
+
+    Runtime.getRuntime().addShutdownHook(thread {
+        spinne.stop()
+    })
 }
+

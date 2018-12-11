@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 /**
  * henter jwt token fra STS
  */
-class AuthHelper(val baseUrl: String, val username: String, val password: String) {
+class StsClient(val baseUrl: String, val username: String, val password: String) {
     private var cachedToken: JSONObject = JSONObject()
     private var expiryDateTime:LocalDateTime = LocalDateTime.now().minusDays(14L)
 
