@@ -4,18 +4,26 @@ import com.github.kittinunf.fuel.httpGet
 import io.prometheus.client.CollectorRegistry
 import no.nav.common.JAASCredential
 import no.nav.common.KafkaEnvironment
-import no.nav.helse.streams.*
+import no.nav.helse.streams.JsonDeserializer
+import no.nav.helse.streams.JsonSerializer
+import no.nav.helse.streams.Topics
 import org.apache.kafka.clients.CommonClientConfigs
-import org.apache.kafka.clients.consumer.*
+import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.config.SaslConfigs
 import org.json.JSONObject
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
-import java.time.*
-import java.util.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.util.Properties
 
 class ComponentTest {
 
@@ -49,16 +57,39 @@ class ComponentTest {
         }
     }
 
+    private lateinit var spinne: Spinne
+
+    @BeforeEach
+    fun `start spinne`() {
+        spinne = Spinne(env)
+        spinne.start()
+    }
+
+    @AfterEach
+    fun `clear prometheus registry`() {
+        spinne.stop()
+        CollectorRegistry.defaultRegistry.clear()
+    }
+
     @Test
     fun `embedded kafka cluster is up and running`() {
         assertEquals(embeddedEnvironment.serverPark.status, KafkaEnvironment.ServerParkStatus.Started)
     }
 
     @Test
-    fun `message from syfo is forwarded as is to behandling topic`() {
-        val spinne = Spinne(env)
-        spinne.start()
+    fun `message from syfo is not forwarded because status is not sendt`() {
+        val msgSent = JSONObject("""{"aktorId": "1573082186699", "soknadstype": "typen", "status": "ny"}""")
+        produceOneMessage(msgSent)
 
+        val resultConsumer = KafkaConsumer<String, JSONObject>(consumerProperties())
+        resultConsumer.subscribe(listOf(Topics.SYKEPENGEBEHANDLING.name))
+        val consumerRecords = resultConsumer.poll(Duration.ofSeconds(10))
+
+        assertEquals(0, consumerRecords.count())
+    }
+
+    @Test
+    fun `message from syfo is forwarded as is to behandling topic`() {
         val msgSent = JSONObject("""{"aktorId": "1573082186699", "soknadstype": "typen", "status": "sendt"}""")
         produceOneMessage(msgSent)
 
@@ -74,7 +105,6 @@ class ComponentTest {
         }
 
         verifyMetrics()
-        spinne.stop()
     }
 
     private fun producerProperties(): Properties {
