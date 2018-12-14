@@ -43,6 +43,7 @@ class Spinne(env: Environment = Environment()) {
 
         stream.peek {key, value -> log.info("Consuming msg ({}) with key {}", value::class.java, key) }
               .peek { _, value -> counter.labels(value["soknadstype"].toString(), value["status"].toString()).inc() }
+              .filter{ _, value -> (value["status"] as String).toUpperCase() == "SENDT" }
               .toTopic(Topics.SYKEPENGEBEHANDLING)
 
         return builder.build()
