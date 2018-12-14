@@ -25,7 +25,7 @@ application {
 
 dependencies {
     compile(kotlin("stdlib"))
-    compile("no.nav.helse:streams:10")
+    compile("no.nav.helse:streams:15")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.2")
     compile("com.github.kittinunf.fuel:fuel:$fuelVersion")
 
